@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/events
+    username: user
+    password: pass
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  rabbitmq:
+    host: rabbitmq
+server:
+  port: 8082

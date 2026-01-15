@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: events
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+
+  ingest-service:
+    build:
+      context: ./ingest-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - rabbitmq
+
+  processor-service:
+    build:
+      context: ./processor-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rabbitmq
+      - postgres
+      - clickhouse
